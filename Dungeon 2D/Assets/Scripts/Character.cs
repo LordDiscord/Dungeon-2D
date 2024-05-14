@@ -5,15 +5,23 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
 
-    private int vida;
-    private int armadura;
-    private int destreza;
-    private int inteligencia;
-    private int iniciativa;
+    protected string name;
+
+    protected int vida;
+    protected int armadura;
+    protected int destreza;
+    protected int inteligencia;
+    protected int iniciativa;
+
+    protected int dice;
+    protected int diceExtra;
+    
+
 
     // Start is called before the first frame update
     void Start()
     {
+        
         
     }
 
