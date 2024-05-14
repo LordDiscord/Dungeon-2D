@@ -5,7 +5,7 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
 
-    protected string name;
+    protected string nombre;
 
     protected int vida;
     protected int armadura;
