@@ -6,7 +6,7 @@ using UnityEngine.Video;
 public class MainCharacter : Character
 {
     
-    public MainCharacter() 
+    public MainCharacter(bool mago) 
     {
         vida = Random.Range(15, 21);
         armadura = 10;
@@ -14,6 +14,13 @@ public class MainCharacter : Character
         inteligencia = 10;
         iniciativa = destreza / 2 + tirarD6(); //posible cambio (6~12)
 
+        if(mago)
+        {
+            vida -= 2;
+            armadura -= 4;
+            destreza -= 3;
+            inteligencia += 5;
+        }
 
     }
 
