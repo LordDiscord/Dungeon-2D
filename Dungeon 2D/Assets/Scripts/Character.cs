@@ -32,4 +32,20 @@ public class Character : MonoBehaviour
     {
         
     }
+
+    public int tirarD20()
+    {
+        return Random.Range(1, 21);     
+    }
+
+    public int tirarD6()
+    {
+        return Random.Range(1, 7);
+    }
+
+    public int tirarD4 ()
+    {
+        return Random.Range(1, 5);
+    }
+
 }

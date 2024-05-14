@@ -12,7 +12,8 @@ public class MainCharacter : Character
         armadura = 10;
         destreza = 10;
         inteligencia = 10;
-        iniciativa = destreza / 2 + Random.Range(1, 7); //posible cambio
+        iniciativa = destreza / 2 + Random.Range(1, 7); //posible cambio (6~12)
+
 
     }
 
