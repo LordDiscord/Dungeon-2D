@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class Goblin : Character
 {
@@ -33,5 +34,23 @@ public class Goblin : Character
     void Update()
     {
         
+    }
+
+    public Goblin crearGoblin ()
+    {
+        Goblin unG;
+
+        int i = Random.Range(0, 2);
+        if (i == 0)
+        {
+            unG = new Goblin(true);
+        }
+        else
+        {
+            unG = new Goblin(false);
+        }
+
+        return unG;
+
     }
 }
