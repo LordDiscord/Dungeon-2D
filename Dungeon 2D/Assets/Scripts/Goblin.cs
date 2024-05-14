@@ -5,6 +5,13 @@ using UnityEngine;
 public class Goblin : Character
 {
     // Start is called before the first frame update
+    
+    public Goblin()
+    {
+
+    }
+
+
     void Start()
     {
         
