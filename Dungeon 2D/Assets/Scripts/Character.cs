@@ -13,8 +13,8 @@ public class Character : MonoBehaviour
     protected int inteligencia;
     protected int iniciativa;
 
-    protected int dice;
-    protected int diceExtra;
+    protected int dado;
+    protected int dadoExtra;
     
 
 
