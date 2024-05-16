@@ -17,6 +17,7 @@ public class Character : MonoBehaviour
     //otros
     protected int dado;
     protected int dadoExtra;
+    protected bool ventaja;
 
 
     // Start is called before the first frame update
@@ -47,6 +48,48 @@ public class Character : MonoBehaviour
     public int tirarD4 ()
     {
         return Random.Range(1, 5);
+    }
+
+    public void atacarDestreza(Character target)
+    {
+        if (ventaja)
+        {
+            dado = tirarD20();
+            dadoExtra = tirarD20();
+            if (dado < dadoExtra)
+            {
+                dado = dadoExtra;
+            }
+        }
+        dado += destreza;
+        if (target.armadura <= dado)
+        {
+            recibirDaño(target);
+            //mostrar tirada por pantalla
+        }
+    }
+    public void atacarInteligencia(Character target)
+    {
+        if (ventaja)
+        {
+            dado = tirarD20();
+            dadoExtra = tirarD20();
+            if (dado < dadoExtra)
+            {
+                dado = dadoExtra;
+            }
+        }
+        dado += inteligencia / 4;
+        if (target.armadura <= dado)
+        {
+            recibirDaño(target);
+            //mostrar tirada por pantalla
+        }
+    }
+    public virtual void recibirDaño(Character target)
+    {
+        int daño = tirarD6() + destreza / 4;
+        target.vida = vida - daño;
     }
 
 }
