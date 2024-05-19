@@ -5,52 +5,49 @@ using UnityEngine.Pool;
 
 public class Goblin : Character
 {
-    // Start is called before the first frame update
+    public Animator anim;
+    public bool check = false;
 
-    public Goblin(bool mago)
+    protected virtual void Awake()
     {
         vida = 5 + tirarD4();
         armadura = 10 + tirarD4();
         destreza = 10 + tirarD6();
         iniciativa = destreza / 2 + tirarD6();
         inteligencia = 4 + tirarD6();
-        if (mago)
-        {
-            vida -= 2;
-            armadura -= 4;
-            destreza -= 3;
-            inteligencia += 5;
-        }
-    }
-
-
+     }
 
     void Start()
     {
-        
+        vidaActual = vida;
+        StartCoroutine(IsDead());
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator IsDead()
     {
-        
-    }
-
-    public Goblin crearGoblin ()
-    {
-        Goblin unG;
-
-        int i = Random.Range(0, 2);
-        if (i == 0)
+        while (true)
         {
-            unG = new Goblin(true);
-        }
-        else
-        {
-            unG = new Goblin(false);
-        }
+            if (vida <= 0)
+            {
+                anim.SetBool("Dead", true);
+                yield return new WaitForSeconds(1f);
+                Debug.Log("HaMuerto");
+                Destroy(gameObject);
+                yield break;
+            }
+            else
+            {
+                anim.SetBool("Dead", false);
+                if(vida < vidaActual)
+                {
+                    anim.SetBool("IsDamaged", true);
+                    yield return new WaitForSeconds(0.2f);
+                    anim.SetBool("IsDamaged", false);
 
-        return unG;
-
+                    vidaActual = vida;
+                }
+            }
+            yield return null;
+        }
     }
 }

@@ -4,21 +4,19 @@ using UnityEngine;
 
 public class Guerrero : MainCharacter
 {
-    // Start is called before the first frame update
-    public Guerrero()
+    protected override void Awake()
     {
-        vida += vida + 5;
+        base.Awake();
+
+        armadura += 4;
+        destreza += 2;
+        inteligencia -= 4;
     }
 
-
-    void Start()
+    protected override void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        base.Start();
+        vida += 5;
+        iniciativa -= 3;
     }
 }

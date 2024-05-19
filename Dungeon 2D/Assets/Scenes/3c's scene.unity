@@ -1425,7 +1425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21dac1f86a3495b43a36ee539c3815c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movSpeed: 8
+  movSpeed: 6
   rb: {fileID: 415656188}
   animator: {fileID: 415656189}
 --- !u!212 &415656186
@@ -1649,8 +1649,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followObject: {fileID: 415656184}
-  followOffset: {x: 6, y: 3}
-  speed: 1
+  followOffset: {x: 6, y: 7}
+  speed: 3
 --- !u!1 &1678126940
 GameObject:
   m_ObjectHideFlags: 0
