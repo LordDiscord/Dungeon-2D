@@ -30,8 +30,8 @@ public class BattleSystem : MonoBehaviour
     void Start()
     {
         gridManager = GetComponent<GridManager>();
-
-        HandlePlayerRespawn();
+        GameObject playerObject = Instantiate(playerPrefab, playerSpawn.position, Quaternion.identity);
+        playerCharacter = playerObject.GetComponent<MainCharacter>();
 
         int numEnemies = Random.Range(2, 4); // cuantos enemigos quieres?
 
@@ -419,34 +419,6 @@ public class BattleSystem : MonoBehaviour
             {
                 victoria = false;
                 break;
-            }
-        }
-    }
-
-    private void HandlePlayerRespawn()
-    {
-        MainCharacter existingPlayer = MainCharacter.Instance;
-
-        if (existingPlayer != null)
-        {
-            // Guardar estadísticas antes de destruir el jugador existente solo si la vida es mayor a 0
-            if (existingPlayer.GetVida() > 0)
-            {
-                existingPlayer.SaveStats();
-            }
-            Destroy(existingPlayer.gameObject);
-        }
-        // Crear nuevo jugador en el punto de spawn
-        GameObject playerObject = Instantiate(playerPrefab, playerSpawn.position, Quaternion.identity);
-
-        // Cargar estadísticas en el nuevo jugador o generar nuevas si no hay estadísticas guardadas
-        playerCharacter = playerObject.GetComponent<MainCharacter>();
-        if (playerCharacter != null)
-        {
-            playerCharacter.LoadStats();
-            if (playerCharacter.GetVida() <= 0)
-            {
-                playerCharacter.GenerateNewStats();
             }
         }
     }
