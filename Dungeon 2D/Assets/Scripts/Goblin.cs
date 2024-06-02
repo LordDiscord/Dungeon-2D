@@ -13,7 +13,7 @@ public class Goblin : Character
 
     protected virtual void Awake()
     {
-        vida = 1;
+        vida = 3 + tirarD6();
         armadura = 10 + tirarD4();
         destreza = 10 + tirarD6();
         iniciativa = destreza / 2 + tirarD6();

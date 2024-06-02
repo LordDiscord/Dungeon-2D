@@ -17,7 +17,7 @@ public class BattleSystem : MonoBehaviour
     List<Goblin> enemies = new List<Goblin>();
 
     private GridManager gridManager;
-
+    public string nameState;
     public Transform[] enemySpawns;
     public Transform playerSpawn;
     public bool canMove = false;
@@ -66,6 +66,7 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SetupBattle()
     {
+        nameState = "SetupBattle";
         Debug.Log("EL COMBATE EMPIEZA, MUCHA SUERTE"); // esto iria en el ui
         yield return new WaitForSeconds(2f);
         Debug.Log("Vida Jugador: " +playerCharacter.GetVida()); // esto iria en el ui
@@ -109,6 +110,7 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator LostBattle()
     {
+        nameState = "Battle Lost";
         canMove = false;
         yield return new WaitForSeconds(2f);
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -118,6 +120,7 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator EndBattle()
     {
+        nameState = "Battle Won";
         canMove = true;
         yield return new WaitForSeconds(2f);
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -127,6 +130,7 @@ public class BattleSystem : MonoBehaviour
 
     void PlayerTurn()
     {
+        nameState = "Player";
         reset = false;
         canMove = true;
         StartCoroutine(PlayerAttackCheck()); //Se ocupa de comprobar que al atacar con el click del raton este a rango y lo ejecuta si asi es
@@ -140,6 +144,7 @@ public class BattleSystem : MonoBehaviour
 
     void EnemyTurn()
     {
+        nameState = "Enemy";
         canMove = false; //hace que el jugador no pueda moverse fuera de su turno
         reset = true; //resetea los movimientos que lleva el jugador a 0 para cuando sea su turno de nuevo
         playerAttack = false; //resetea el ataque del jugador para su turno
