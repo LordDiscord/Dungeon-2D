@@ -150,6 +150,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 2802854846111392046}
+  popUpDamagePrefab: {fileID: 7160758451082832173, guid: bae9d08a3089e7943934447b2215aa63, type: 3}
+  popUpText: {fileID: 6189121203235084153, guid: bae9d08a3089e7943934447b2215aa63, type: 3}
 --- !u!114 &5678447807281049732
 MonoBehaviour:
   m_ObjectHideFlags: 0

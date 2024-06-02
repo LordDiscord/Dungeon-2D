@@ -101,6 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 6468463567001282013}
   check: 0
+  popUpDamagePrefab: {fileID: 7160758451082832173, guid: bae9d08a3089e7943934447b2215aa63, type: 3}
+  popUpText: {fileID: 6189121203235084153, guid: bae9d08a3089e7943934447b2215aa63, type: 3}
 --- !u!95 &6468463567001282013
 Animator:
   serializedVersion: 5

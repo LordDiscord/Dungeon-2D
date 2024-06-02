@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+
 
 public class MainCharacter : Character
 {
 
     public Animator anim;
     private bool guerrero = true; // esto es la clase default para esta prueba, luego se popdrán escoger
+    public GameObject popUpDamagePrefab;
+    public TMP_Text popUpText;
 
     protected virtual void Start()
     {
@@ -21,7 +25,9 @@ public class MainCharacter : Character
         {
             if (vida <= 0)
             {
-                anim.SetBool("Dead", true);
+                popUpText.text = (vidaActual - vida).ToString();
+                Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+                Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity); anim.SetBool("Dead", true);
                 Debug.Log("HAS MUERTO");
                 yield return new WaitForSeconds(3f);
                 Destroy(gameObject);
@@ -32,7 +38,9 @@ public class MainCharacter : Character
                 anim.SetBool("Dead", false);
                 if (vida < vidaActual)
                 {
-                    anim.SetBool("IsDamaged", true);
+                    popUpText.text = (vidaActual - vida).ToString();
+                    Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+                    Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity); anim.SetBool("IsDamaged", true);
                     yield return new WaitForSeconds(0.2f);
                     anim.SetBool("IsDamaged", false);
                     vidaActual = vida;

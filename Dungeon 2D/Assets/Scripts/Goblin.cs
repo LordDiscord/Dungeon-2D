@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.Pool;
 
 public class Goblin : Character
 {
     public Animator anim;
     public bool check = false;
+    public GameObject popUpDamagePrefab;
+    public TMP_Text popUpText;
 
     protected virtual void Awake()
     {
@@ -29,6 +32,9 @@ public class Goblin : Character
         {
             if (vida <= 0)
             {
+                popUpText.text = (vidaActual-vida).ToString();
+                Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+                Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity);
                 anim.SetBool("Dead", true);
                 yield return new WaitForSeconds(1f);
                 Debug.Log("HaMuerto");
@@ -41,7 +47,9 @@ public class Goblin : Character
                 if(vida < vidaActual)
                 {
                     anim.SetBool("IsDamaged", true);
-                    yield return new WaitForSeconds(0.2f);
+                    popUpText.text = (vidaActual - vida).ToString();
+                    Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+                    Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity); yield return new WaitForSeconds(0.2f);
                     anim.SetBool("IsDamaged", false);
 
                     vidaActual = vida;
