@@ -9,9 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Sala Combate niv1.unity
-    guid: 67e233fc9e24bd84dac2372bf4f47d26
+    path: Assets/Scenes/Main Menu.unity
+    guid: 7b323037465114f43b01db4938ada39d
   - enabled: 1
     path: Assets/Scenes/3c's scene.unity
     guid: f06ce0af9d1e34c47bbe483a944a8dae
+  - enabled: 1
+    path: Assets/Scenes/Sala Combate niv1.unity
+    guid: 67e233fc9e24bd84dac2372bf4f47d26
   m_configObjects: {}
