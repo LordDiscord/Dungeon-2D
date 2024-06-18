@@ -9,8 +9,7 @@ public class MainCharacter : Character
 
     public Animator anim;
     private bool fighter = true; // esto es la clase default para esta prueba, luego se popdrán escoger
-    public GameObject popUpDamagePrefab;
-    public TMP_Text popUpText;
+
 
     protected virtual void Start()
     {

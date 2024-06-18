@@ -8,8 +8,6 @@ public class Goblin : Character
 {
     public Animator anim;
     public bool check = false;
-    public GameObject popUpDamagePrefab;
-    public TMP_Text popUpText;
 
     protected virtual void Awake()
     {

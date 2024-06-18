@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Character : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class Character : MonoBehaviour
     protected int dexterity;
     protected int intelligence;
     protected int initiative;
+    public GameObject popUpDamagePrefab;
+    public TMP_Text popUpText;
+
     // items
     protected int goldCoins;
     // otros
@@ -66,6 +70,9 @@ public class Character : MonoBehaviour
             {
                 Debug.Log("HAS ESQUIVADO EL ATAQUE");
             }
+            popUpText.text = "MISS";
+            Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+            Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity);
         }
     }
 
