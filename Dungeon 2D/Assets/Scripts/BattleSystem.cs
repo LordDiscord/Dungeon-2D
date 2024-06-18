@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
+public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST } //Maquina de Estados
 
 public class BattleSystem : MonoBehaviour
 {
@@ -69,19 +69,8 @@ public class BattleSystem : MonoBehaviour
     IEnumerator SetupBattle()
     {
         nameState = "SetupBattle";
-        Debug.Log("EL COMBATE EMPIEZA, MUCHA SUERTE"); // esto iria en el ui
-        yield return new WaitForSeconds(2f);
-        Debug.Log("Vida Jugador: " + playerCharacter.GetHealth()); // esto iria en el ui
-        foreach (Goblin enemy in enemies)
-        {
-            Debug.Log("Vida Enemigo: " + enemy.GetHealth()); // esto iria en el ui
-        }
         yield return new WaitForSeconds(2f);
         Debug.Log("Iniciativa Jugador: " + playerCharacter.GetInitiative()); // esto iria en el ui
-        foreach (Goblin enemy in enemies)
-        {
-            Debug.Log("Iniciativa Enemigo: " + enemy.GetInitiative()); // esto iría en el ui
-        }
         bool playerFirst = true;
         foreach (Goblin enemy in enemies)
         {
@@ -93,20 +82,13 @@ public class BattleSystem : MonoBehaviour
         }
         if (playerFirst)
         {
-            Debug.Log("TURNO JUGADOR"); // esto iria en el ui
-            Debug.Log("RECUERDA QUE SOLO TE PUEDES MOVER 6 CASILLAS"); // esto iria en el ui
-            Debug.Log("TAMBIEN RECUERDA QUE PARA ATACAR HAS DE CLICAR ENCIMA DEL GOBLIN"); // esto iria en el ui
-            Debug.Log("Y POR ÚLTIMO RECUERDA QUE PARA PASAR TURNO HAS DE PRESIONAR LA 'T'"); // esto iria en el ui
             state = BattleState.PLAYERTURN;
             PlayerTurn();
         }
         else
         {
-            Debug.Log("TURNO ENEMIGO"); // esto iria en el ui
             state = BattleState.ENEMYTURN;
         }
-
-
     }
 
     IEnumerator LostBattle()
@@ -137,7 +119,6 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(PlayerAttackCheck()); //Se ocupa de comprobar que al atacar con el click del raton este a rango y lo ejecuta si asi es
         if (Input.GetKeyDown(KeyCode.T) && !victoria) //Pulsando la tecla T pasas el turno al enemigo
         {
-            Debug.Log("TURNO ENEMIGO"); // esto iria en el ui
             state = BattleState.ENEMYTURN;
         }
     }
@@ -216,7 +197,6 @@ public class BattleSystem : MonoBehaviour
         if (victoria == true)
         {
             state = BattleState.WON; // si ha matado al enemigo gana
-            Debug.Log("FELICIDADES POR COMPLETAR ESTE NIVEL!");
         }
     }
 
