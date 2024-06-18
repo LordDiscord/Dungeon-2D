@@ -13,16 +13,16 @@ public class Goblin : Character
 
     protected virtual void Awake()
     {
-        vida = 3 + tirarD6();
-        armadura = 10 + tirarD4();
-        destreza = 10 + tirarD6();
-        iniciativa = destreza / 2 + tirarD6();
-        inteligencia = 4 + tirarD6();
+        health = 3 + throwD6();
+        armor = 10 + throwD4();
+        dexterity = 10 + throwD6();
+        initiative = dexterity / 2 + throwD6();
+        intelligence = 4 + throwD6();
      }
 
     void Start()
     {
-        vidaActual = vida;
+        currentHealth = health;
         StartCoroutine(IsDead());
     }
 
@@ -30,9 +30,9 @@ public class Goblin : Character
     {
         while (true)
         {
-            if (vida <= 0)
+            if (health <= 0)
             {
-                popUpText.text = (vidaActual-vida).ToString();
+                popUpText.text = (currentHealth-health).ToString();
                 Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
                 Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity);
                 anim.SetBool("Dead", true);
@@ -44,15 +44,15 @@ public class Goblin : Character
             else
             {
                 anim.SetBool("Dead", false);
-                if(vida < vidaActual)
+                if(health < currentHealth)
                 {
                     anim.SetBool("IsDamaged", true);
-                    popUpText.text = (vidaActual - vida).ToString();
+                    popUpText.text = (currentHealth - health).ToString();
                     Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
                     Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity); yield return new WaitForSeconds(0.2f);
                     anim.SetBool("IsDamaged", false);
 
-                    vidaActual = vida;
+                    currentHealth = health;
                 }
             }
             yield return null;

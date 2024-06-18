@@ -33,7 +33,7 @@ public class UIController : MonoBehaviour
         if (jugador != null)
         {
             // Actualizar los textos con los valores de las estadísticas del jugador
-            if(turno.playerAttack == false && turno.nameState == "Player")
+            if(turno.playerAttack == false && turno.state == BattleState.PLAYERTURN)
             {
                 attackText.text = "ATTACK: 1";
             }
@@ -41,14 +41,14 @@ public class UIController : MonoBehaviour
             {
                 attackText.text = "ATTACK: 0";
             }
-            turnText.text = "CURRENT TURN: " + turno.nameState;
-            hpText.text = "HEALTH: " + jugador.GetVida().ToString();
-            hpText2.text = "HP: " + jugador.GetVida().ToString();
-            armorText.text = "ARMOR: " + jugador.GetArmadura().ToString();
-            armorText2.text = "ARMOR: " + jugador.GetArmadura().ToString();
-            dexText.text = "DEXTERITY: " + jugador.GetDestreza().ToString();
-            intText.text = "INTELIGENCE: " + jugador.GetInteligencia().ToString();
-            initText.text = "INITIATIVE: " + jugador.GetIniciativa().ToString();
+            turnText.text = "CURRENT TURN: " + turno.state;
+            hpText.text = "HEALTH: " + jugador.GetHealth().ToString();
+            hpText2.text = "HP: " + jugador.GetHealth().ToString();
+            armorText.text = "ARMOR: " + jugador.GetArmor().ToString();
+            armorText2.text = "ARMOR: " + jugador.GetArmor().ToString();
+            dexText.text = "DEXTERITY: " + jugador.GetDexterity().ToString();
+            intText.text = "INTELIGENCE: " + jugador.GetIntelligence().ToString();
+            initText.text = "INITIATIVE: " + jugador.GetInitiative().ToString();
         }
         else
         {
@@ -58,7 +58,7 @@ public class UIController : MonoBehaviour
 
         if (movimiento != null)
         {
-            if (turno.nameState != "Player")
+            if (turno.state != BattleState.PLAYERTURN)
             {
                 movText.text = "MOVEMENT: 0";
             }

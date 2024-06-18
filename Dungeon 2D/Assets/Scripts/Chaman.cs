@@ -8,10 +8,10 @@ public class Chaman : Goblin
     protected override void Awake()
     {
         base.Awake();
-        vida -= 2;
-        armadura -= 4;
-        destreza -= 3;
-        inteligencia += 5;
+        health -= 2;
+        armor -= 4;
+        dexterity -= 3;
+        intelligence += 5;
     }
 
     void Start()

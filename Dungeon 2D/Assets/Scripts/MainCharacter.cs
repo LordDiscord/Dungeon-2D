@@ -8,14 +8,14 @@ public class MainCharacter : Character
 {
 
     public Animator anim;
-    private bool guerrero = true; // esto es la clase default para esta prueba, luego se popdrán escoger
+    private bool fighter = true; // esto es la clase default para esta prueba, luego se popdrán escoger
     public GameObject popUpDamagePrefab;
     public TMP_Text popUpText;
 
     protected virtual void Start()
     {
         GenerateNewStats();
-            vidaActual = vida;
+            currentHealth = health;
             StartCoroutine(IsDead());
     }
 
@@ -23,27 +23,27 @@ public class MainCharacter : Character
     {
         while (true)
         {
-            if (vida <= 0)
+            if (health <= 0)
             {
-                popUpText.text = (vidaActual - vida).ToString();
+                popUpText.text = (currentHealth - health).ToString();
                 Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
                 Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity); anim.SetBool("Dead", true);
                 Debug.Log("HAS MUERTO");
-                yield return new WaitForSeconds(3f);
+                yield return new WaitForSeconds(2f);
                 Destroy(gameObject);
                 yield break;
             }
             else
             {
                 anim.SetBool("Dead", false);
-                if (vida < vidaActual)
+                if (health < currentHealth)
                 {
-                    popUpText.text = (vidaActual - vida).ToString();
+                    popUpText.text = (currentHealth - health).ToString();
                     Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
                     Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity); anim.SetBool("IsDamaged", true);
                     yield return new WaitForSeconds(0.2f);
                     anim.SetBool("IsDamaged", false);
-                    vidaActual = vida;
+                    currentHealth = health;
                 }
             }
             yield return null;
@@ -52,21 +52,21 @@ public class MainCharacter : Character
     public void GenerateNewStats()
     {
         // Inicializa las estadísticas básicas
-        vida = Random.Range(15, 21);
-        armadura = 10;
-        destreza = 10;
-        inteligencia = 10;
-        iniciativa = destreza / 2 + tirarD6(); // Posible cambio (6~12)
-        nombre = "player";
-        if (guerrero)
+        health = Random.Range(15, 21);
+        armor = 10;
+        dexterity = 10;
+        intelligence = 10;
+        initiative = dexterity / 2 + throwD6(); // Posible cambio (6~12)
+        name = "player";
+        if (fighter)
         {
-            armadura += 4;
-            destreza += 2;
-            inteligencia -= 4;
-            vida += 5;
-            iniciativa -= 3;
+            armor += 4;
+            dexterity += 2;
+            intelligence -= 4;
+            health += 5;
+            initiative -= 3;
         }
-        vidaActual = vida;
+        currentHealth = health;
         Debug.Log("GENERANDO");
     }
 

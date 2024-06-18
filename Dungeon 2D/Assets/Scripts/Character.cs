@@ -4,61 +4,61 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    protected string nombre;
+    protected new string name;
     // stats
-    protected int vida;
-    protected int vidaActual;
-    protected int armadura;
-    protected int destreza;
-    protected int inteligencia;
-    protected int iniciativa;
+    protected int health;
+    protected int currentHealth;
+    protected int armor;
+    protected int dexterity;
+    protected int intelligence;
+    protected int initiative;
     // items
-    protected int monedasDeOro;
+    protected int goldCoins;
     // otros
-    protected int dado;
-    protected int dadoExtra;
-    protected bool ventaja;
-    protected int daño;
+    protected int dice;
+    protected int extraDice;
+    protected bool advantadge;
+    protected int damage;
 
     // Método para tirar un D20
-    public int tirarD20()
+    public int throwD20()
     {
         return Random.Range(1, 21);
     }
 
     // Método para tirar un D6
-    public int tirarD6()
+    public int throwD6()
     {
         return Random.Range(1, 7);
     }
 
     // Método para tirar un D4
-    public int tirarD4()
+    public int throwD4()
     {
         return Random.Range(1, 5);
     }
 
     // Método para atacar usando destreza
-    public void atacarDestreza(Character target)
+    public void attackDex(Character target)
     {
-        dado = tirarD20();
-        if (ventaja)
+        dice = throwD20();
+        if (advantadge)
         {
-            dadoExtra = tirarD20();
-            if (dado < dadoExtra)
+            extraDice = throwD20();
+            if (dice < extraDice)
             {
-                dado = dadoExtra;
+                dice = extraDice;
             }
         }
-        dado += (destreza-10) / 2; //segun las normas de D&D
-        if (target.armadura <= dado)
+        dice += (dexterity-10) / 2; //segun las normas de D&D
+        if (target.armor <= dice)
         {
-            recibirDaño(target, destreza);
+            takeDamage(target, dexterity);
             // mostrar tirada por pantalla
         }
         else
         {
-            if(target.nombre != "player") //Todo esto es temporal y se cambiara cuando se haga una interfaz
+            if(target.name != "player") //Todo esto es temporal y se cambiara cuando se haga una interfaz
             {
                 Debug.Log("OH NO EL ATAQUE A FALLADO!");
             }
@@ -70,62 +70,62 @@ public class Character : MonoBehaviour
     }
 
     // Método para atacar usando inteligencia
-    public void atacarInteligencia(Character target)
+    public void attackInt(Character target)
     {
-        dado = tirarD20();
-        if (ventaja)
+        dice = throwD20();
+        if (advantadge)
         {
-            dadoExtra = tirarD20();
-            if (dado < dadoExtra)
+            extraDice = throwD20();
+            if (dice < extraDice)
             {
-                dado = dadoExtra;
+                dice = extraDice;
             }
         }
-        dado += (inteligencia-10) / 2; //segun las normas de D&D
-        if (target.armadura <= dado)
+        dice += (intelligence-10) / 2; //segun las normas de D&D
+        if (target.armor <= dice)
         {
-            recibirDaño(target, inteligencia);
+            takeDamage(target, intelligence);
             // mostrar tirada por pantalla
         }
     }
 
     // Método virtual para recibir daño
-    public virtual void recibirDaño(Character target, int tipo)
+    public virtual void takeDamage(Character target, int type)
     {
-        daño = tirarD6() + (tipo - 10) / 2;
-        target.vida -= daño;
-        if(target.nombre != "player") //Todo esto es temporal y se cambiara cuando se haga una interfaz
+        damage = throwD6() + (type - 10) / 2;
+        target.health -= damage;
+        if(target.name != "player") //Todo esto es temporal y se cambiara cuando se haga una interfaz
         {
-            Debug.Log("EL ATAQUE A FUNCIONADO, HAS SASCADO UN " + dado + " Y A SUPERADO LOS " + target.armadura + " DE ARMADURA DEL ENEMIGO HACIENDOLE " + daño + " PUNTOS DE DAÑO, SU VIDA ACTUAL ES DE " + target.vida);
+            Debug.Log("EL ATAQUE A FUNCIONADO, HAS SASCADO UN " + dice + " Y A SUPERADO LOS " + target.armor + " DE ARMADURA DEL ENEMIGO HACIENDOLE " + damage + " PUNTOS DE DAÑO, SU VIDA ACTUAL ES DE " + target.health);
         }
         else
         {
-            Debug.Log("EL ENEMIGO TE HA HERIDO SACANDO UN  "+ dado + " Y A SUPERADO TUS " + target.armadura + " DE ARMADURA HACIENDOTE " + daño + " PUNTOS DE DAÑO, TU VIDA ACTUAL ES DE " + target.vida);
+            Debug.Log("EL ENEMIGO TE HA HERIDO SACANDO UN  "+ dice + " Y A SUPERADO TUS " + target.armor + " DE ARMADURA HACIENDOTE " + damage + " PUNTOS DE DAÑO, TU VIDA ACTUAL ES DE " + target.health);
         }
     }
 
-    public int GetVida()
+    public int GetHealth()
     {
-        return vida;
+        return health;
     }
 
-    public int GetDestreza()
+    public int GetDexterity()
     {
-        return destreza;
+        return dexterity;
     }
 
-    public int GetInteligencia()
+    public int GetIntelligence()
     {
-        return inteligencia;
+        return intelligence;
     }
 
-    public int GetIniciativa()
+    public int GetInitiative()
     {
-        return iniciativa;
+        return initiative;
     }
 
-    public int GetArmadura()
+    public int GetArmor()
     {
-        return armadura;
+        return armor;
     }
 }

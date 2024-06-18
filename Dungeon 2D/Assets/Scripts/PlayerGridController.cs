@@ -23,13 +23,13 @@ public class PlayerGridController : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, speed * Time.deltaTime);
         if (Vector3.Distance(transform.position, movePoint.position) <= 0f) // chequea que ya ha llegado a la casilla antes de volver a mover
         {
-            if (battleSystem.GetVictoria() == true || battleSystem.GetReset() == true)
+            if (battleSystem.state == BattleState.WON || battleSystem.reset == true)
             {
                 numMovimiento = 0; // si has ganado te podras mover libremente
             }
             if (numMovimiento < 6) //jugador limitado ha 6 casillas por turno en combate
             {
-                if (battleSystem.GetCanMove() == true) // es tu turno?
+                if (battleSystem.canMove == true) // es tu turno?
                 {
                     if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
                     {
