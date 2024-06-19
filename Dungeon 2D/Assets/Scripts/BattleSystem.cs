@@ -23,8 +23,9 @@ public class BattleSystem : MonoBehaviour
     public bool reset = false;
     public bool victoria = false;
     public bool playerAttack = false;
-
     public BattleState state;
+    private PlayerGridController playerGridController;
+
     void Awake()
     {
         gridManager = GetComponent<GridManager>();
@@ -34,14 +35,14 @@ public class BattleSystem : MonoBehaviour
             playerCharacter = playerObject.GetComponent<MainCharacter>();
             DontDestroyOnLoad(playerObject);
             MainCharacter.instance = playerCharacter; // Asignar la instancia
-            PlayerGridController playerGridController = playerObject.GetComponent<PlayerGridController>();
+            playerGridController = playerObject.GetComponent<PlayerGridController>();
             playerGridController.SetMovePointToSpawn(playerSpawn.position);
         }
         else
         {
             playerCharacter = MainCharacter.instance;
             playerCharacter.RespawnAt(playerSpawn.position);
-            PlayerGridController playerGridController = playerCharacter.GetComponent<PlayerGridController>();
+            playerGridController = playerCharacter.GetComponent<PlayerGridController>();
             playerGridController.SetMovePointToSpawn(playerSpawn.position);
         }
     }
