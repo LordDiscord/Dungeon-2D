@@ -7,15 +7,34 @@ using TMPro;
 public class MainCharacter : Character
 {
 
-    public Animator anim;
-    private bool fighter = true; // esto es la clase default para esta prueba, luego se popdrán escoger
+    public static MainCharacter instance; // Singleton instance
 
+    public Animator anim;
+    private bool fighter = true; // Esto es la clase default para esta prueba, luego se podrán escoger
+
+    protected virtual void Awake()
+    {
+        // Implementación del Singleton
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); // No destruir al cambiar de escena
+        }
+        else
+        {
+            Destroy(gameObject); // Destruir duplicados
+            return;
+        }
+    }
 
     protected virtual void Start()
     {
-        GenerateNewStats();
+        if (instance == this) // Solo inicializar si este objeto es la instancia
+        {
+            GenerateNewStats();
             currentHealth = health;
             StartCoroutine(IsDead());
+        }
     }
 
     IEnumerator IsDead()
@@ -69,6 +88,11 @@ public class MainCharacter : Character
         Debug.Log("GENERANDO");
     }
 
+    public void RespawnAt(Vector3 position)
+    {
+        transform.position = position;
+    }
+
     public void AttackUp() // activar animaciones
     {
         anim.SetBool("AttackUp", true);
@@ -88,11 +112,9 @@ public class MainCharacter : Character
     public void AttackRight()
     {
         anim.SetBool("AttackRight", true);
-        Debug.Log("Yes");
     }
     public void NoAttackRight()
     {
         anim.SetBool("AttackRight", false);
-        Debug.Log("No");
     }
 }

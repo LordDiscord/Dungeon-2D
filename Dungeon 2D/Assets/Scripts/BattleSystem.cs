@@ -25,13 +25,29 @@ public class BattleSystem : MonoBehaviour
     public bool playerAttack = false;
 
     public BattleState state;
+    void Awake()
+    {
+        gridManager = GetComponent<GridManager>();
+        if (MainCharacter.instance == null)
+        {
+            GameObject playerObject = Instantiate(playerPrefab, playerSpawn.position, Quaternion.identity);
+            playerCharacter = playerObject.GetComponent<MainCharacter>();
+            DontDestroyOnLoad(playerObject);
+            MainCharacter.instance = playerCharacter; // Asignar la instancia
+            PlayerGridController playerGridController = playerObject.GetComponent<PlayerGridController>();
+            playerGridController.SetMovePointToSpawn(playerSpawn.position);
+        }
+        else
+        {
+            playerCharacter = MainCharacter.instance;
+            playerCharacter.RespawnAt(playerSpawn.position);
+            PlayerGridController playerGridController = playerCharacter.GetComponent<PlayerGridController>();
+            playerGridController.SetMovePointToSpawn(playerSpawn.position);
+        }
+    }
 
     void Start()
     {
-        gridManager = GetComponent<GridManager>();
-        GameObject playerObject = Instantiate(playerPrefab, playerSpawn.position, Quaternion.identity);
-        playerCharacter = playerObject.GetComponent<MainCharacter>();
-
         int numEnemies = Random.Range(1, 2); // cuantos enemigos quieres?
 
         for (int j = 0; j < numEnemies; j++) //establece los enemigos en los puntos de spawn
@@ -97,7 +113,6 @@ public class BattleSystem : MonoBehaviour
         canMove = false;
         yield return new WaitForSeconds(2f);
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-
         SceneManager.LoadScene(currentSceneIndex);
     }
 
@@ -107,7 +122,6 @@ public class BattleSystem : MonoBehaviour
         canMove = true;
         yield return new WaitForSeconds(2f);
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-
         SceneManager.LoadScene(currentSceneIndex);
     }
 

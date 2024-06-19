@@ -15,11 +15,16 @@ public class PlayerGridController : MonoBehaviour
     void Start()
     {
         movePoint.parent = null;
-        battleSystem = GameObject.FindObjectOfType<BattleSystem>();
+        FindBattleSystem();
     }
 
     void Update()
     {
+        if (battleSystem == null)
+        {
+            FindBattleSystem();
+        }
+        Debug.Log(battleSystem.state);
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, speed * Time.deltaTime);
         if (Vector3.Distance(transform.position, movePoint.position) <= 0f) // chequea que ya ha llegado a la casilla antes de volver a mover
         {
@@ -79,5 +84,14 @@ public class PlayerGridController : MonoBehaviour
                 anim.SetBool("Moving", false);
             }
         }
+    }
+
+    private void FindBattleSystem()
+    {
+        battleSystem = GameObject.FindObjectOfType<BattleSystem>();
+    }
+    public void SetMovePointToSpawn(Vector3 spawnPosition)
+    {
+        movePoint.position = spawnPosition;
     }
 }

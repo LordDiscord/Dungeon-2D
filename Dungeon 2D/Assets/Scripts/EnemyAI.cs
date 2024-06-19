@@ -31,10 +31,6 @@ public class EnemyAI : MonoBehaviour
             battleSystem.reset = true; //resetea los movimientos que lleva el jugador a 0 para cuando sea su turno de nuevo
             battleSystem.playerAttack = false; //resetea el ataque del jugador para su turno
             yield return StartCoroutine(MoveAndAttack());
-
-            // End turn
-            battleSystem.state = BattleState.PLAYERTURN;
-
             yield return null;
         }
     }
@@ -180,9 +176,9 @@ public class EnemyAI : MonoBehaviour
             else
             {
                 Debug.Log("TU TURNO"); // esto iria en el ui
+                battleSystem.state = BattleState.PLAYERTURN;
             }
         }
-        battleSystem.state = BattleState.PLAYERTURN;
 
         yield return null;
     }
