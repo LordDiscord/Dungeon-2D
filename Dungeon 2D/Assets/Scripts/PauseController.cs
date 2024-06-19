@@ -5,14 +5,13 @@ using UnityEngine;
 public class PauseController : MonoBehaviour
 {
     public GameObject menu; // Referencia al objeto del menú
-    private bool menuOpen = false; // Estado del menú
 
     void Update()
     {
         // Abrir o cerrar el menú al presionar la tecla "Esc"
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!menuOpen)
+            if (!menu.activeSelf)
             {
                 OpenMenu();
             }
@@ -25,15 +24,17 @@ public class PauseController : MonoBehaviour
 
     void OpenMenu()
     {
-        // Activar el menú y actualizar el estado
+        // Activar el menú
         menu.SetActive(true);
-        menuOpen = true;
+        // Detener el tiempo del juego
+        Time.timeScale = 0f;
     }
 
-    void CloseMenu()
+    public void CloseMenu()
     {
-        // Desactivar el menú y actualizar el estado
+        // Desactivar el menú
         menu.SetActive(false);
-        menuOpen = false;
+        // Reanudar el tiempo del juego
+        Time.timeScale = 1f;
     }
 }

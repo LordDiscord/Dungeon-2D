@@ -6,14 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public string playScene; // Nombre de la escena a cargar
-    public void PlayGame()
+    public void OnStartGameButtonClicked()
     {
-        SceneManager.LoadScene(playScene);
+        GameManager.instance.LoadScene("3c's scene");
     }
 
-    public void QuitGame()
+    public void OnQuitButtonClicked()
     {
-        Application.Quit();
+        GameManager.instance.QuitGame();
     }
 }
