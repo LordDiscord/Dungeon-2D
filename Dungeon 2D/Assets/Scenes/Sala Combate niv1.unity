@@ -4757,7 +4757,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 4711353802604709550, guid: 9fc130d096220cd49ae1c044c618b4f9, type: 3}
-  enemyPrefab: {fileID: 3559787557224776981, guid: 5eba4054aeea1c1489a8c453a3845657, type: 3}
+  goblinPrefab: {fileID: 3559787557224776981, guid: 5eba4054aeea1c1489a8c453a3845657, type: 3}
+  skeletonPrefab: {fileID: 2331009442542841586, guid: 228206735b901db48b2d8dba96a626d8, type: 3}
   enemyAiPrefab: {fileID: 0}
   playerCharacter: {fileID: 0}
   enemyAI: {fileID: 0}

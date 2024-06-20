@@ -7,6 +7,8 @@ public class Character : MonoBehaviour
 {
     protected new string name;
     // stats
+    public  Animator anim;
+    public bool check;
     protected int health;
     protected int currentHealth;
     protected int armor;

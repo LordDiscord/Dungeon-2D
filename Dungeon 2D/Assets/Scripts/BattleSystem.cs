@@ -8,12 +8,13 @@ public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST } //Maquina de
 public class BattleSystem : MonoBehaviour
 {
     public GameObject playerPrefab;
-    public GameObject enemyPrefab;
+    public GameObject goblinPrefab;
+    public GameObject skeletonPrefab;
     public GameObject enemyAiPrefab;
 
     public MainCharacter playerCharacter; // Declarar como variable de nivel de clase
     public EnemyAI enemyAI;
-    public List<Goblin> enemies = new List<Goblin>();
+    public List<Character> enemies = new List<Character>();
 
     public GameObject portal;
     private GridManager gridManager;
@@ -50,21 +51,25 @@ public class BattleSystem : MonoBehaviour
 
     void Start()
     {
-        int numEnemies = Random.Range(1, 2); // cuantos enemigos quieres?
+        int minNum = 1 + GameManager.instance.level / 3;
+        int maxNum = 1 + GameManager.instance.level;
+        int numEnemies = Random.Range(minNum, maxNum);
+        Debug.Log("minNum: "+minNum);
+        Debug.Log("maxNum: " + maxNum);
 
-        for (int j = 0; j < numEnemies; j++) //establece los enemigos en los puntos de spawn
+        for (int j = 0; j < numEnemies; j++)
         {
             if (j < enemySpawns.Length)
             {
-                GameObject enemyObject = Instantiate(enemyPrefab, enemySpawns[j].position, Quaternion.identity);
-                Goblin enemyCharacter = enemyObject.GetComponent<Goblin>();
+                GameObject enemyObject = Instantiate(skeletonPrefab, enemySpawns[j].position, Quaternion.identity);
+                Skeleton enemyCharacter = enemyObject.GetComponent<Skeleton>();
                 enemies.Add(enemyCharacter);
             }
         }
         state = BattleState.START;
         StartCoroutine(SetupBattle());
         enemyAI = new GameObject("EnemyAI").AddComponent<EnemyAI>();
-        enemyAI.Initialize(gridManager, this, enemies[0]); // Aquí debes pasar los parámetros correctos según tu implementación
+        enemyAI.Initialize(gridManager, this, enemies[0]); 
         enemyAI.StartEnemyAI();
     }
 
@@ -90,7 +95,7 @@ public class BattleSystem : MonoBehaviour
         yield return new WaitForSeconds(2f);
         Debug.Log("Iniciativa Jugador: " + playerCharacter.GetInitiative()); // esto iria en el ui
         bool playerFirst = true;
-        foreach (Goblin enemy in enemies)
+        foreach (Character enemy in enemies)
         {
             if (enemy.GetInitiative() > playerCharacter.GetInitiative())
             {
@@ -150,8 +155,8 @@ public class BattleSystem : MonoBehaviour
             if (hit.collider != null && hit.collider.CompareTag("Enemy")) // Si el rayo choca con un colisionador de enemigo
             {
                 GameObject enemyGameObject = hit.collider.gameObject;
-                Goblin enemy = enemyGameObject.GetComponent<Goblin>();
-                if (enemy != null) // Verifica si el componente Goblin está presente en el enemigo clicado
+                Character enemy = enemyGameObject.GetComponent<Character>();
+                if (enemy != null) // Verifica si el componente Character está presente en el enemigo clicado
                 {
                     Vector2 enemyPos = enemy.transform.position;
                     float distanceToEnemy = Vector3.Distance(playerCharacter.transform.position, enemyGameObject.transform.position);
@@ -194,7 +199,7 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    void AttackEnemy(Goblin enemy)
+    void AttackEnemy(Character enemy)
     {
         if (playerCharacter.GetDexterity() >= playerCharacter.GetIntelligence())
         {

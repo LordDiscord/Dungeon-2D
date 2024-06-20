@@ -4,21 +4,21 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Pool;
 
-public class Goblin : Character
+public class Skeleton : Character
 {
     public GameObject[] potionPrefabs; // Array de prefabs de las pociones
 
     protected virtual void Awake()
     {
         check = false;
-        speed = 6;
-        attacks = 1;
-        health = 3 + throwD6();
-        armor = 10 + throwD4();
-        dexterity = 10 + throwD6();
-        initiative = dexterity / 2 + throwD6();
-        intelligence = 4 + throwD6();
-     }
+        speed = 4;
+        attacks = 2;
+        health = 5 + throwD6();
+        armor = 9 + throwD4();
+        dexterity = 9 + throwD4();
+        initiative = dexterity / 2 + throwD4();
+        intelligence = throwD6();
+    }
 
     void Start()
     {
@@ -32,7 +32,7 @@ public class Goblin : Character
         {
             if (health <= 0)
             {
-                popUpText.text = (currentHealth-health).ToString();
+                popUpText.text = (currentHealth - health).ToString();
                 Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
                 Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity);
                 anim.SetBool("Dead", true);
@@ -47,7 +47,7 @@ public class Goblin : Character
             else
             {
                 anim.SetBool("Dead", false);
-                if(health < currentHealth)
+                if (health < currentHealth)
                 {
                     anim.SetBool("IsDamaged", true);
                     popUpText.text = (currentHealth - health).ToString();

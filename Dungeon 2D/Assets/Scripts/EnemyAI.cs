@@ -1,17 +1,18 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemyAI : MonoBehaviour
 {
     private GridManager gridManager;
     private BattleSystem battleSystem;
-    private Goblin goblinEnemy;
+    private Character enemyCharacter;
 
-    public void Initialize(GridManager gridManager, BattleSystem battleSystem, Goblin goblin)
+    public void Initialize(GridManager gridManager, BattleSystem battleSystem, Character enemy)
     {
         this.gridManager = gridManager;
         this.battleSystem = battleSystem;
-        this.goblinEnemy = goblin;
+        this.enemyCharacter = enemy;
     }
 
     public void StartEnemyAI()
@@ -27,9 +28,9 @@ public class EnemyAI : MonoBehaviour
 
             // Perform enemy actions
             battleSystem.nameState = "Enemy";
-            battleSystem.canMove = false; //hace que el jugador no pueda moverse fuera de su turno
-            battleSystem.reset = true; //resetea los movimientos que lleva el jugador a 0 para cuando sea su turno de nuevo
-            battleSystem.playerAttack = 0; //resetea el ataque del jugador para su turno
+            battleSystem.canMove = false; // hace que el jugador no pueda moverse fuera de su turno
+            battleSystem.reset = true; // resetea los movimientos que lleva el jugador a 0 para cuando sea su turno de nuevo
+            battleSystem.playerAttack = 0; // resetea el ataque del jugador para su turno
             yield return StartCoroutine(MoveAndAttack());
             yield return null;
         }
@@ -39,15 +40,11 @@ public class EnemyAI : MonoBehaviour
     {
         Vector2 playerPos = battleSystem.GetPlayerPosition();
 
-        // Logic for enemy movement towards player
-        // Example: Move towards player and attack if in range
-        foreach (Goblin enemy in battleSystem.enemies) // Moverá por cada enemigo
+        foreach (Character enemy in battleSystem.enemies)
         {
             Vector2 enemyPos = enemy.transform.position;
-            bool hasAttacked = false;
-
-            float distanceToPlayerInitial = Vector2.Distance(enemyPos, playerPos); //Comprovamos si el jugador esta a rango antes de que el enemigo mueva
-            if (distanceToPlayerInitial <= 1.5f && IsDiagonalOrAdjacent(enemyPos, playerPos))
+            int hasAttacked = 0;
+            if (IsPlayerInRange(enemyPos, playerPos))
             {
                 if (playerPos.x < enemyPos.x && enemy.check == false)
                 {
@@ -57,133 +54,103 @@ public class EnemyAI : MonoBehaviour
                 {
                     MueveDerecha(enemy);
                 }
-                EnemyAttackAnim(enemy);
-                yield return new WaitForSeconds(1f);
-                EnemyNotAttack(enemy);
-                enemy.attackDex(battleSystem.playerCharacter);
-                hasAttacked = true;
-            }
-            if (!hasAttacked)// Si el enemigo no ha atacado, realizar movimientos y chequeo de ataque
-            {
-                for (int i = 0; i < goblinEnemy.GetSpeed(); i++) //lo comprueba las veces que el enemigo se mueva
+                for(hasAttacked = 0; hasAttacked < enemy.GetAttacks(); hasAttacked++)
                 {
-                    if (!hasAttacked) // Si el enemigo no ha atacado, realizar movimientos y chequeo de ataque
+                    EnemyAttackAnim(enemy);
+                    yield return new WaitForSeconds(0.5f);
+                    EnemyNotAttack(enemy);
+                    enemy.attackDex(battleSystem.playerCharacter);
+                }
+            }
+            for (int i = 0; i < enemy.GetSpeed(); i++)
+            {
+                if (hasAttacked < enemy.GetAttacks())
+                {
+                    if (IsPlayerInRange(enemyPos, playerPos))
                     {
-                        Vector2 nextPos = GetNextPositionTowards(playerPos, enemyPos, enemy);
-
-                        if (gridManager.IsWalkable(nextPos))
+                        if (playerPos.x < enemyPos.x && enemy.check == false)
                         {
-                            EnemyMoves(enemy);
-                            yield return StartCoroutine(MoveToPosition(enemy.transform, nextPos, 0.5f)); // Mueve al enemigo gradualmente
-                            EnemyNotMoves(enemy);
-                            enemyPos = nextPos;
+                            MueveIzquierda(enemy);
+                        }
+                        else if (playerPos.x > enemyPos.x && enemy.check == true)
+                        {
+                            MueveDerecha(enemy);
+                        }
+                        for (hasAttacked = 0; hasAttacked < enemy.GetAttacks(); hasAttacked++)
+                        {
+                            EnemyAttackAnim(enemy);
+                            yield return new WaitForSeconds(0.5f);
+                            EnemyNotAttack(enemy);
+                            enemy.attackDex(battleSystem.playerCharacter);
+                        }
+                        break;
+                    }
 
-                            float distanceToPlayerNew = Vector2.Distance(enemyPos, playerPos);
-                            if (distanceToPlayerNew <= 1.5f && IsDiagonalOrAdjacent(enemyPos, playerPos)) // Verificar si está en rango y en posición diagonal o adyacente
+                    Vector2 nextPos = GetNextPositionTowards(playerPos, enemyPos, enemy);
+
+                    if (gridManager.IsWalkable(nextPos))
+                    {
+                        EnemyMoves(enemy);
+                        yield return StartCoroutine(MoveToPosition(enemy.transform, nextPos, 0.5f));
+                        EnemyNotMoves(enemy);
+                        enemyPos = nextPos;
+
+                        if (IsPlayerInRange(enemyPos, playerPos))
+                        {
+                            for (hasAttacked = 0; hasAttacked < enemy.GetAttacks(); hasAttacked++)
                             {
                                 EnemyAttackAnim(enemy);
                                 yield return new WaitForSeconds(0.5f);
                                 EnemyNotAttack(enemy);
                                 enemy.attackDex(battleSystem.playerCharacter);
-                                hasAttacked = true;
                             }
+                            break;
                         }
-                        else
+                    }
+                    else
+                    {
+                        // Si la próxima posición no es transitable, intenta rodear el obstáculo
+                        Vector2 newPos = GetAlternatePosition(enemyPos, playerPos);
+
+                        EnemyMoves(enemy);
+                        yield return StartCoroutine(MoveToPosition(enemy.transform, newPos, 0.5f));
+                        EnemyNotMoves(enemy);
+                        enemyPos = newPos;
+
+                        if (IsPlayerInRange(enemyPos, playerPos))
                         {
-                            // Si la próxima posición no es transitable, intenta rodear el obstáculo
-                            Vector2 upPos = enemyPos + new Vector2(0, 1);
-                            Vector2 downPos = enemyPos + new Vector2(0, -1);
-                            Vector2 leftPos = enemyPos + new Vector2(-1, 0);
-                            Vector2 rightPos = enemyPos + new Vector2(1, 0);
-                            Vector2 newPos = enemyPos;
-
-                            // Comprobar si el jugador y el enemigo están en el mismo eje X
-                            if (Mathf.Approximately(playerPos.x, enemyPos.x))
-                            {
-                                if (playerPos.y > enemyPos.y && gridManager.IsWalkable(rightPos))
-                                {
-                                    newPos = rightPos;
-                                }
-                                else if (gridManager.IsWalkable(leftPos))
-                                {
-                                    newPos = leftPos;
-                                }
-                            }
-                            else if (Mathf.Approximately(playerPos.y, enemyPos.y)) // Comprobar si el jugador y el enemigo están en el mismo eje Y
-                            {
-                                if (playerPos.x > enemyPos.x && gridManager.IsWalkable(upPos))
-                                {
-                                    newPos = upPos;
-                                }
-                                else if (gridManager.IsWalkable(downPos))
-                                {
-                                    newPos = downPos;
-                                }
-                            }
-                            else
-                            {
-                                // Intenta moverse hacia la izquierda, derecha, arriba o abajo para rodear el obstáculo
-                                float distanceToLeft = Vector2.Distance(leftPos, playerPos);
-                                float distanceToRight = Vector2.Distance(rightPos, playerPos);
-                                float distanceToUp = Vector2.Distance(upPos, playerPos);
-                                float distanceToDown = Vector2.Distance(downPos, playerPos);
-
-                                if (distanceToLeft < distanceToRight && gridManager.IsWalkable(leftPos))
-                                {
-                                    newPos = leftPos;
-                                }
-                                else if (distanceToLeft > distanceToRight && gridManager.IsWalkable(rightPos))
-                                {
-                                    newPos = rightPos;
-                                }
-                                else if (distanceToUp < distanceToDown && gridManager.IsWalkable(upPos))
-                                {
-                                    newPos = upPos;
-                                }
-                                else if (distanceToUp > distanceToDown && gridManager.IsWalkable(downPos))
-                                {
-                                    newPos = downPos;
-                                }
-                                else
-                                {
-                                    newPos = enemyPos; // Si no se puede mover hacia arriba o abajo, permanece en la misma posición
-                                }
-
-                            }
-                            EnemyMoves(enemy);
-                            yield return StartCoroutine(MoveToPosition(enemy.transform, newPos, 0.5f)); // Mueve al enemigo gradualmente
-                            EnemyNotMoves(enemy);
-                            enemyPos = newPos; // Actualiza la posición del enemigo
-
-                            float distanceToPlayerAfterMove = Vector2.Distance(enemyPos, playerPos);
-                            if (distanceToPlayerAfterMove <= 1.5f && IsDiagonalOrAdjacent(enemyPos, playerPos))
-                            {
-                                EnemyAttackAnim(enemy);
-                                EnemyNotAttack(enemy);
-                                enemy.attackDex(battleSystem.playerCharacter);
-                                yield return new WaitForSeconds(1f);
-                                hasAttacked = true;
-                            }
+                            EnemyAttackAnim(enemy);
+                            yield return new WaitForSeconds(1f);
+                            EnemyNotAttack(enemy);
+                            enemy.attackDex(battleSystem.playerCharacter);
+                            hasAttacked++;
+                            break;
                         }
                     }
                 }
             }
-            if (battleSystem.playerCharacter.GetHealth() < 1)
-            {
-                Debug.Log("Perdiste");
-                battleSystem.state = BattleState.LOST;
-            }
-            else
-            {
-                Debug.Log("TU TURNO"); // esto iria en el ui
-                battleSystem.state = BattleState.PLAYERTURN;
-            }
+        }
+
+        if (battleSystem.playerCharacter.GetHealth() < 1)
+        {
+            Debug.Log("Perdiste");
+            battleSystem.state = BattleState.LOST;
+        }
+        else
+        {
+            Debug.Log("TU TURNO");
+            battleSystem.state = BattleState.PLAYERTURN;
         }
 
         yield return null;
     }
 
-    Vector2 GetNextPositionTowards(Vector2 targetPos, Vector2 currentPos, Goblin enemy)
+    private bool IsPlayerInRange(Vector2 enemyPos, Vector2 playerPos)
+    {
+        return Vector2.Distance(enemyPos, playerPos) <= 1.5f && IsDiagonalOrAdjacent(enemyPos, playerPos);
+    }
+
+    private Vector2 GetNextPositionTowards(Vector2 targetPos, Vector2 currentPos, Character enemy)
     {
         Vector2 direction = (targetPos - currentPos).normalized;
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
@@ -206,6 +173,63 @@ public class EnemyAI : MonoBehaviour
         return nextPos;
     }
 
+    private Vector2 GetAlternatePosition(Vector2 enemyPos, Vector2 playerPos)
+    {
+        Vector2 upPos = enemyPos + new Vector2(0, 1);
+        Vector2 downPos = enemyPos + new Vector2(0, -1);
+        Vector2 leftPos = enemyPos + new Vector2(-1, 0);
+        Vector2 rightPos = enemyPos + new Vector2(1, 0);
+        Vector2 newPos = enemyPos;
+
+        if (Mathf.Approximately(playerPos.x, enemyPos.x))
+        {
+            if (playerPos.y > enemyPos.y && gridManager.IsWalkable(rightPos))
+            {
+                newPos = rightPos;
+            }
+            else if (gridManager.IsWalkable(leftPos))
+            {
+                newPos = leftPos;
+            }
+        }
+        else if (Mathf.Approximately(playerPos.y, enemyPos.y))
+        {
+            if (playerPos.x > enemyPos.x && gridManager.IsWalkable(upPos))
+            {
+                newPos = upPos;
+            }
+            else if (gridManager.IsWalkable(downPos))
+            {
+                newPos = downPos;
+            }
+        }
+        else
+        {
+            float distanceToLeft = Vector2.Distance(leftPos, playerPos);
+            float distanceToRight = Vector2.Distance(rightPos, playerPos);
+            float distanceToUp = Vector2.Distance(upPos, playerPos);
+            float distanceToDown = Vector2.Distance(downPos, playerPos);
+
+            if (distanceToLeft < distanceToRight && gridManager.IsWalkable(leftPos))
+            {
+                newPos = leftPos;
+            }
+            else if (distanceToLeft > distanceToRight && gridManager.IsWalkable(rightPos))
+            {
+                newPos = rightPos;
+            }
+            else if (distanceToUp < distanceToDown && gridManager.IsWalkable(upPos))
+            {
+                newPos = upPos;
+            }
+            else if (distanceToUp > distanceToDown && gridManager.IsWalkable(downPos))
+            {
+                newPos = downPos;
+            }
+        }
+        return newPos;
+    }
+
     IEnumerator MoveToPosition(Transform transform, Vector2 target, float duration)
     {
         Vector2 start = transform.position;
@@ -221,43 +245,50 @@ public class EnemyAI : MonoBehaviour
         transform.position = target;
     }
 
-    bool IsDiagonalOrAdjacent(Vector2 pos1, Vector2 pos2)// Verifica si dos posiciones están a una distancia de 1 unidad en cualquier dirección, incluyendo diagonales.
+    bool IsDiagonalOrAdjacent(Vector2 pos1, Vector2 pos2)
     {
         Vector2 diff = pos1 - pos2;
         return Mathf.Abs(diff.x) <= 1 && Mathf.Abs(diff.y) <= 1;
     }
 
-    public void MueveIzquierda(Goblin enemy) // se encarga de flipear el sprite
+    public void MueveIzquierda(Character enemy)
     {
         enemy.transform.Rotate(new Vector3(0, 180, 0));
         enemy.check = true;
     }
-    public void MueveDerecha(Goblin enemy)
+
+    public void MueveDerecha(Character enemy)
     {
         enemy.transform.Rotate(new Vector3(0, 180, 0));
         enemy.check = false;
     }
-    public void EnemyMoves(Goblin enemy)
+
+    public void EnemyMoves(Character enemy)
     {
         enemy.anim.SetBool("Running", true);
     }
-    public void EnemyNotMoves(Goblin enemy)
+
+    public void EnemyNotMoves(Character enemy)
     {
         enemy.anim.SetBool("Running", false);
     }
-    public void EnemyAttackAnim(Goblin enemy)
+
+    public void EnemyAttackAnim(Character enemy)
     {
         enemy.anim.SetBool("Attacking", true);
     }
-    public void EnemyNotAttack(Goblin enemy)
+
+    public void EnemyNotAttack(Character enemy)
     {
         enemy.anim.SetBool("Attacking", false);
     }
-    public void EnemyDamageAnim(Goblin enemy)
+
+    public void EnemyDamageAnim(Character enemy)
     {
         enemy.anim.SetBool("IsDamaged", true);
     }
-    public void EnemyNotDamage(Goblin enemy)
+
+    public void EnemyNotDamage(Character enemy)
     {
         enemy.anim.SetBool("IsDamaged", false);
     }

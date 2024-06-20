@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public int level = 0;
 
     private void Awake()
     {
@@ -21,6 +22,10 @@ public class GameManager : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
+        if(sceneName == "Sala Combate niv1")
+        {
+            level++; // cada vez que cargue la escena aumentara el nivel
+        }
     }
 
     public void ReloadCurrentScene()

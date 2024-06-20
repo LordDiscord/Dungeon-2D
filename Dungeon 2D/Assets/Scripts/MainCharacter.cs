@@ -10,7 +10,6 @@ public class MainCharacter : Character
     public static MainCharacter instance; // Singleton instance
 
     private int count = 0;
-    public Animator anim;
     private bool fighter = true; // Esto es la clase default para esta prueba, luego se podrán escoger
 
     public Dictionary<string, List<Item>> inventory = new Dictionary<string, List<Item>>();
@@ -85,10 +84,10 @@ public class MainCharacter : Character
         if (fighter)
         {
             attacks = 1;
-            armor += 4;
-            dexterity += 2;
+            armor += 3;
+            dexterity += throwD4() + 2;
             intelligence -= 4;
-            health += 5;
+            health += 7;
             initiative -= 3;
         }
         currentHealth = health;
