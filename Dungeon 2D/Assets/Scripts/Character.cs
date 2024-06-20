@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
     protected int dexterity;
     protected int intelligence;
     protected int initiative;
+    protected int attacks;
     public GameObject popUpDamagePrefab;
     public TMP_Text popUpText;
 
@@ -134,5 +135,10 @@ public class Character : MonoBehaviour
     public int GetArmor()
     {
         return armor;
+    }
+
+    public int GetAttacks()
+    {
+        return attacks;
     }
 }

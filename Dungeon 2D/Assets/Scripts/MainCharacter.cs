@@ -9,8 +9,11 @@ public class MainCharacter : Character
 
     public static MainCharacter instance; // Singleton instance
 
+    private int count = 0;
     public Animator anim;
     private bool fighter = true; // Esto es la clase default para esta prueba, luego se podrán escoger
+
+    public Dictionary<string, List<Item>> inventory = new Dictionary<string, List<Item>>();
 
     protected virtual void Awake()
     {
@@ -25,6 +28,7 @@ public class MainCharacter : Character
             Destroy(gameObject); // Destruir duplicados
             return;
         }
+        inventory = new Dictionary<string, List<Item>>();
     }
 
     protected virtual void Start()
@@ -70,6 +74,7 @@ public class MainCharacter : Character
     public void GenerateNewStats()
     {
         // Inicializa las estadísticas básicas
+        attacks = 0;
         health = Random.Range(15, 21);
         armor = 10;
         dexterity = 10;
@@ -78,6 +83,7 @@ public class MainCharacter : Character
         name = "player";
         if (fighter)
         {
+            attacks = 1;
             armor += 4;
             dexterity += 2;
             intelligence -= 4;
@@ -86,6 +92,62 @@ public class MainCharacter : Character
         }
         currentHealth = health;
         Debug.Log("GENERANDO");
+    }
+
+    public void AddItem(Item item)
+    {
+        if (!inventory.ContainsKey(item.Type))
+        {
+            inventory[item.Type] = new List<Item>();
+        }
+        inventory[item.Type].Add(item);
+    }
+
+
+    // Método para usar un ítem del inventario
+    public void UseItem(string itemType)
+    {
+        if (inventory.ContainsKey(itemType) && inventory[itemType].Count > 0)
+        {
+            // Aquí puedes implementar la lógica para usar el ítem del tipo especificado
+            Item item = inventory[itemType][0]; // Tomamos el primer ítem del tipo especificado
+            if (itemType == "HealthPotion")
+            {
+                health += ((HealthPotion)item).HealAmount;
+            }
+            else if (itemType == "ArmorPotion")
+            {
+                armor += ((ArmorPotion)item).ArmorAmount;
+            }
+            else if (itemType == "AdvantadgePotion")
+            {
+                advantadge = true;
+            }
+            else if (itemType == "AttackPotion")
+            {
+                attacks += ((AttackPotion)item).AttackAmount;
+            }
+            inventory[itemType].RemoveAt(0); // Eliminamos el ítem del inventario
+            Debug.Log(item.Name + " usado.");
+        }
+        else
+        {
+            Debug.Log("No hay ítems del tipo " + itemType + " en el inventario.");
+        }
+    }
+
+    public int GetItemCount(string itemKey)
+    {
+        if (inventory.ContainsKey(itemKey))
+        {
+            count = inventory[itemKey].Count;
+        }
+        else
+        {
+            count = 0;
+        }
+        Debug.Log(itemKey+": "+count);
+        return count;
     }
 
     public void RespawnAt(Vector3 position)

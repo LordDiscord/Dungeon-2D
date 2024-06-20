@@ -8,9 +8,11 @@ public class Goblin : Character
 {
     public Animator anim;
     public bool check = false;
+    public GameObject[] potionPrefabs; // Array de prefabs de las pociones
 
     protected virtual void Awake()
     {
+        attacks = 1;
         health = 3 + throwD6();
         armor = 10 + throwD4();
         dexterity = 10 + throwD6();
@@ -35,7 +37,14 @@ public class Goblin : Character
                 Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity);
                 anim.SetBool("Dead", true);
                 yield return new WaitForSeconds(1f);
-                Debug.Log("HaMuerto");
+
+                // Spawnear entre 1 y 3 pociones
+                int numPotionsToSpawn = Random.Range(1, 4);
+                for (int i = 0; i < numPotionsToSpawn; i++)
+                {
+                    SpawnPotion();
+                }
+
                 Destroy(gameObject);
                 yield break;
             }
@@ -49,11 +58,22 @@ public class Goblin : Character
                     Vector3 newPosition = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
                     Instantiate(popUpDamagePrefab, newPosition, Quaternion.identity); yield return new WaitForSeconds(0.2f);
                     anim.SetBool("IsDamaged", false);
-
                     currentHealth = health;
                 }
             }
             yield return null;
         }
+    }
+
+    void SpawnPotion()
+    {
+        // Elegir aleatoriamente un prefab de poción
+        GameObject potionPrefab = potionPrefabs[Random.Range(0, potionPrefabs.Length)];
+
+        // Mantener la misma posicion que el enemigo
+        Vector3 spawnPosition = transform.position;
+
+        // Instanciar la poción
+        Instantiate(potionPrefab, spawnPosition, Quaternion.identity);
     }
 }

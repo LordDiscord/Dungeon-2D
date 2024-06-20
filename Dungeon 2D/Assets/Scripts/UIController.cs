@@ -6,6 +6,7 @@ using TMPro;
 
 public class UIController : MonoBehaviour
 {
+
     public TextMeshProUGUI movText;
     public TextMeshProUGUI attackText;
     public TextMeshProUGUI hpText;
@@ -16,44 +17,49 @@ public class UIController : MonoBehaviour
     public TextMeshProUGUI intText;
     public TextMeshProUGUI initText;
     public TextMeshProUGUI turnText;
+    public TextMeshProUGUI healthCount;
+    public TextMeshProUGUI armorCount;
+    public TextMeshProUGUI advantadgeCount;
+    public TextMeshProUGUI attackCount;
+    private int attacksCount = 0;
 
-    public MainCharacter jugador; // Referencia al objeto jugador
+    public MainCharacter player; // Referencia al objeto jugador
     public PlayerGridController movimiento; // Referencia al objeto jugador
     public BattleSystem turno;
 
     void Start()
     {
         // Buscar al jugador en la escena al iniciar
-        jugador = FindObjectOfType<MainCharacter>();
+        player = FindObjectOfType<MainCharacter>();
         movimiento = FindObjectOfType<PlayerGridController>();
     }
 
     void Update()
     {
-        if (jugador != null)
+        if (player != null)
         {
             // Actualizar los textos con los valores de las estadísticas del jugador
-            if(turno.playerAttack == false && turno.state == BattleState.PLAYERTURN)
-            {
-                attackText.text = "ATTACK: 1";
-            }
-            else
-            {
-                attackText.text = "ATTACK: 0";
-            }
+            attacksCount = player.GetAttacks() - turno.playerAttack;
+
             turnText.text = "CURRENT TURN: " + turno.state;
-            hpText.text = "HEALTH: " + jugador.GetHealth().ToString();
-            hpText2.text = "HP: " + jugador.GetHealth().ToString();
-            armorText.text = "ARMOR: " + jugador.GetArmor().ToString();
-            armorText2.text = "ARMOR: " + jugador.GetArmor().ToString();
-            dexText.text = "DEXTERITY: " + jugador.GetDexterity().ToString();
-            intText.text = "INTELIGENCE: " + jugador.GetIntelligence().ToString();
-            initText.text = "INITIATIVE: " + jugador.GetInitiative().ToString();
+            hpText.text = "HEALTH: " + player.GetHealth().ToString();
+            hpText2.text = "HP: " + player.GetHealth().ToString();
+            armorText.text = "ARMOR: " + player.GetArmor().ToString();
+            armorText2.text = "ARMOR: " + player.GetArmor().ToString();
+            dexText.text = "DEXTERITY: " + player.GetDexterity().ToString();
+            intText.text = "INTELIGENCE: " + player.GetIntelligence().ToString();
+            initText.text = "INITIATIVE: " + player.GetInitiative().ToString();
+
+            //Inventory
+            healthCount.text = player.GetItemCount("HealthPotion").ToString();
+            armorCount.text = player.GetItemCount("ArmorPotion").ToString();
+            advantadgeCount.text = player.GetItemCount("AdvantadgePotion").ToString();
+            attackCount.text = player.GetItemCount("AttackPotion").ToString();
         }
         else
         {
             // Intentar encontrar al jugador si aún no se ha encontrado
-            jugador = FindObjectOfType<MainCharacter>();
+            player = FindObjectOfType<MainCharacter>();
         }
 
         if (movimiento != null)
@@ -61,15 +67,34 @@ public class UIController : MonoBehaviour
             if (turno.state != BattleState.PLAYERTURN)
             {
                 movText.text = "MOVEMENT: 0";
+                attackText.text = "ATTACKS: 0";
             }
             else
             {
                 movText.text = "MOVEMENT: " + (6 - movimiento.numMovimiento).ToString();
+                attackText.text = "ATTACKS: " + attacksCount;
             }
         }
         else
         {
             movimiento = FindObjectOfType<PlayerGridController>();
         }
+    }
+
+    public void UseHealthPotion()
+    {
+        player.UseItem("HealthPotion");
+    }
+    public void UseArmorPotion()
+    {
+        player.UseItem("ArmorPotion");
+    }
+    public void UseAdvantadgerPotion()
+    {
+        player.UseItem("AdvantadgePotion");
+    }
+    public void UseAttackPotion()
+    {
+        player.UseItem("AttackPotion");
     }
 }

@@ -15,6 +15,7 @@ public class BattleSystem : MonoBehaviour
     public EnemyAI enemyAI;
     public List<Goblin> enemies = new List<Goblin>();
 
+    public GameObject portal;
     private GridManager gridManager;
     public string nameState;
     public Transform[] enemySpawns;
@@ -22,7 +23,7 @@ public class BattleSystem : MonoBehaviour
     public bool canMove = false;
     public bool reset = false;
     public bool victoria = false;
-    public bool playerAttack = false;
+    public int playerAttack = 0;
     public BattleState state;
     private PlayerGridController playerGridController;
 
@@ -75,7 +76,7 @@ public class BattleSystem : MonoBehaviour
         }
         if (state == BattleState.WON)
         {
-            StartCoroutine(EndBattle());
+            EndBattle();
         }
         if (state == BattleState.LOST)
         {
@@ -117,13 +118,14 @@ public class BattleSystem : MonoBehaviour
         SceneManager.LoadScene(currentSceneIndex);
     }
 
-    IEnumerator EndBattle()
+    void EndBattle()
     {
         nameState = "Battle Won";
         canMove = true;
-        yield return new WaitForSeconds(2f);
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex);
+        if (portal != null)
+        {
+            portal.SetActive(true); // Activar el portal
+        }
     }
 
     void PlayerTurn()
@@ -140,7 +142,7 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator PlayerAttackCheck()
     {
-        if (Input.GetMouseButtonDown(0) && !playerAttack) // Verifica si el jugador hizo clic y no ha atacado aún en este turno
+        if (Input.GetMouseButtonDown(0) && playerAttack != playerCharacter.GetAttacks()) // Verifica si el jugador hizo clic y no ha atacado aún en este turno
         {
             Vector2 playerPos = playerCharacter.transform.position;
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Convierte la posición del clic del ratón a coordenadas del mundo
@@ -202,7 +204,7 @@ public class BattleSystem : MonoBehaviour
         {
             playerCharacter.attackInt(enemy);
         }
-        playerAttack = true; // Establece playerAttack en true para indicar que el jugador ha atacado en este turno
+        playerAttack++; // Realiza un Ataque y se suma uno al contador
         victoria = true;
         if (enemy.GetHealth() < 1)
         {

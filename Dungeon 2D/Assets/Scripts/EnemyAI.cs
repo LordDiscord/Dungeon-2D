@@ -29,7 +29,7 @@ public class EnemyAI : MonoBehaviour
             battleSystem.nameState = "Enemy";
             battleSystem.canMove = false; //hace que el jugador no pueda moverse fuera de su turno
             battleSystem.reset = true; //resetea los movimientos que lleva el jugador a 0 para cuando sea su turno de nuevo
-            battleSystem.playerAttack = false; //resetea el ataque del jugador para su turno
+            battleSystem.playerAttack = 0; //resetea el ataque del jugador para su turno
             yield return StartCoroutine(MoveAndAttack());
             yield return null;
         }
