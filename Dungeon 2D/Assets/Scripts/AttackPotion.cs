@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AttackPotion : Item
 {
-    public int AttackAmount = 1; // Cantidad de salud que restaura esta poción
+    public int AttackAmount = 1; 
 
     // Constructor para inicializar el tipo y nombre de la poción de salud
     public AttackPotion()

@@ -11,10 +11,12 @@ public class PlayerGridController : MonoBehaviour
     public LayerMask stopMovement;
     public int numMovimiento = 0;
     private BattleSystem battleSystem;
+    private MainCharacter player;
 
     void Start()
     {
         movePoint.parent = null;
+        player = GetComponent<MainCharacter>();
         FindBattleSystem();
     }
 
@@ -32,7 +34,7 @@ public class PlayerGridController : MonoBehaviour
             {
                 numMovimiento = 0; // si has ganado te podras mover libremente
             }
-            if (numMovimiento < 6) //jugador limitado ha 6 casillas por turno en combate
+            if (numMovimiento < player.GetSpeed()) //jugador limitado ha su movimiento
             {
                 if (battleSystem.canMove == true) // es tu turno?
                 {

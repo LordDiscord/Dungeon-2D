@@ -14,7 +14,7 @@ public class PortalCombat : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // Cargar la escena especificada
-            SceneManager.LoadScene(sceneToLoad);
+            GameManager.instance.LoadScene("Sala Combate niv1");
         }
     }
 }

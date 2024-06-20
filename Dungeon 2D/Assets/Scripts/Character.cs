@@ -14,6 +14,7 @@ public class Character : MonoBehaviour
     protected int intelligence;
     protected int initiative;
     protected int attacks;
+    protected int speed;
     public GameObject popUpDamagePrefab;
     public TMP_Text popUpText;
 
@@ -140,5 +141,10 @@ public class Character : MonoBehaviour
     public int GetAttacks()
     {
         return attacks;
+    }
+
+    public int GetSpeed()
+    {
+        return speed;
     }
 }

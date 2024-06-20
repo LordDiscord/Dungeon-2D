@@ -19,7 +19,7 @@ public class UIController : MonoBehaviour
     public TextMeshProUGUI turnText;
     public TextMeshProUGUI healthCount;
     public TextMeshProUGUI armorCount;
-    public TextMeshProUGUI advantadgeCount;
+    public TextMeshProUGUI speedCount;
     public TextMeshProUGUI attackCount;
     private int attacksCount = 0;
 
@@ -53,7 +53,7 @@ public class UIController : MonoBehaviour
             //Inventory
             healthCount.text = player.GetItemCount("HealthPotion").ToString();
             armorCount.text = player.GetItemCount("ArmorPotion").ToString();
-            advantadgeCount.text = player.GetItemCount("AdvantadgePotion").ToString();
+            speedCount.text = player.GetItemCount("SpeedPotion").ToString();
             attackCount.text = player.GetItemCount("AttackPotion").ToString();
         }
         else
@@ -71,7 +71,7 @@ public class UIController : MonoBehaviour
             }
             else
             {
-                movText.text = "MOVEMENT: " + (6 - movimiento.numMovimiento).ToString();
+                movText.text = "MOVEMENT: " + (player.GetSpeed() - movimiento.numMovimiento).ToString();
                 attackText.text = "ATTACKS: " + attacksCount;
             }
         }
@@ -89,12 +89,12 @@ public class UIController : MonoBehaviour
     {
         player.UseItem("ArmorPotion");
     }
-    public void UseAdvantadgerPotion()
-    {
-        player.UseItem("AdvantadgePotion");
-    }
     public void UseAttackPotion()
     {
         player.UseItem("AttackPotion");
+    }
+    public void UseSpeedPotion()
+    {
+        player.UseItem("SpeedPotion");
     }
 }

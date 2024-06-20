@@ -12,6 +12,7 @@ public class Goblin : Character
 
     protected virtual void Awake()
     {
+        speed = 6;
         attacks = 1;
         health = 3 + throwD6();
         armor = 10 + throwD4();
@@ -38,12 +39,8 @@ public class Goblin : Character
                 anim.SetBool("Dead", true);
                 yield return new WaitForSeconds(1f);
 
-                // Spawnear entre 1 y 3 pociones
-                int numPotionsToSpawn = Random.Range(1, 4);
-                for (int i = 0; i < numPotionsToSpawn; i++)
-                {
-                    SpawnPotion();
-                }
+                // Spawnear 1 pocion
+                SpawnPotion();
 
                 Destroy(gameObject);
                 yield break;

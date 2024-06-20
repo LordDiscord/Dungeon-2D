@@ -65,7 +65,7 @@ public class EnemyAI : MonoBehaviour
             }
             if (!hasAttacked)// Si el enemigo no ha atacado, realizar movimientos y chequeo de ataque
             {
-                for (int i = 0; i < 6; i++) //lo comprueba 6 veces ya que se va a mover 6 veces
+                for (int i = 0; i < goblinEnemy.GetSpeed(); i++) //lo comprueba las veces que el enemigo se mueva
                 {
                     if (!hasAttacked) // Si el enemigo no ha atacado, realizar movimientos y chequeo de ataque
                     {

@@ -79,6 +79,7 @@ public class MainCharacter : Character
         armor = 10;
         dexterity = 10;
         intelligence = 10;
+        speed = 6;
         initiative = dexterity / 2 + throwD6(); // Posible cambio (6~12)
         name = "player";
         if (fighter)
@@ -119,9 +120,9 @@ public class MainCharacter : Character
             {
                 armor += ((ArmorPotion)item).ArmorAmount;
             }
-            else if (itemType == "AdvantadgePotion")
+            else if (itemType == "SpeedPotion")
             {
-                advantadge = true;
+                speed += ((SpeedPotion)item).SpeedAmount;
             }
             else if (itemType == "AttackPotion")
             {
