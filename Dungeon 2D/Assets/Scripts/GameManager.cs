@@ -1,10 +1,14 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public float fadeDuration = 1f; // Duración del desvanecimiento
     public int level = 0;
+    private BattleSystem battleSystem;
 
     private void Awake()
     {
@@ -21,11 +25,18 @@ public class GameManager : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneName);
-        if(sceneName == "Sala Combate niv1")
+        if (sceneName == "Sala Combate niv1")
         {
+            if (level != 0) {
+                if (battleSystem == null)
+                {
+                    battleSystem = GameObject.FindObjectOfType<BattleSystem>();
+                    battleSystem.canMove = false;
+                }
+            }
             level++; // cada vez que cargue la escena aumentara el nivel
         }
+        StartCoroutine(FadeAndSwitchScenes(sceneName));
     }
 
     public void ReloadCurrentScene()
@@ -67,5 +78,13 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    private IEnumerator FadeAndSwitchScenes(string sceneName)
+    {
+        FadeTransition.instance.FadeToBlack();
+        yield return new WaitForSeconds(FadeTransition.instance.fadeDuration); // Esperar a que la imagen se desvanezca completamente
+        SceneManager.LoadScene(sceneName);
+        FadeTransition.instance.FadeFromBlack();
     }
 }

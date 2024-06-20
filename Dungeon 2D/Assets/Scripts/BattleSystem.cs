@@ -57,14 +57,21 @@ public class BattleSystem : MonoBehaviour
         Debug.Log("minNum: "+minNum);
         Debug.Log("maxNum: " + maxNum);
 
+        List<int> spawnIndices = new List<int>(); // Lista para guardar los índices de spawn ya utilizados
         for (int j = 0; j < numEnemies; j++)
         {
-            if (j < enemySpawns.Length)
+            // Genera un índice aleatorio que no haya sido utilizado aún
+            int randomIndex = Random.Range(0, enemySpawns.Length);
+            while (spawnIndices.Contains(randomIndex))
             {
-                GameObject enemyObject = Instantiate(skeletonPrefab, enemySpawns[j].position, Quaternion.identity);
-                Skeleton enemyCharacter = enemyObject.GetComponent<Skeleton>();
-                enemies.Add(enemyCharacter);
+                randomIndex = Random.Range(0, enemySpawns.Length);
             }
+            spawnIndices.Add(randomIndex); // Agrega el índice a la lista de utilizados
+
+            // Instancia el enemigo en la posición aleatoria y guarda la referencia en la lista de enemigos
+            GameObject enemyObject = Instantiate(skeletonPrefab, enemySpawns[randomIndex].position, Quaternion.identity);
+            Skeleton enemyCharacter = enemyObject.GetComponent<Skeleton>();
+            enemies.Add(enemyCharacter);
         }
         state = BattleState.START;
         StartCoroutine(SetupBattle());
@@ -126,7 +133,6 @@ public class BattleSystem : MonoBehaviour
     void EndBattle()
     {
         nameState = "Battle Won";
-        canMove = true;
         if (portal != null)
         {
             portal.SetActive(true); // Activar el portal
@@ -218,6 +224,7 @@ public class BattleSystem : MonoBehaviour
         Alive();
         if (victoria == true)
         {
+            canMove = true;
             state = BattleState.WON; // si ha matado al enemigo gana
         }
     }
