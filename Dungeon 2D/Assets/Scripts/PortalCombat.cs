@@ -6,15 +6,20 @@ using UnityEngine.SceneManagement;
 
 public class PortalCombat : MonoBehaviour
 {
-    public string sceneToLoad; // Nombre de la escena a cargar
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         // Verificar si el objeto en contacto es el jugador
         if (other.CompareTag("Player"))
         {
             // Cargar la escena especificada
-            GameManager.instance.LoadScene("Sala Combate niv1");
+            if (GameManager.instance.level == 10)
+            {
+                GameManager.instance.LoadScene("Win scene");
+            }
+            else
+            {
+                GameManager.instance.LoadScene("Sala Combate niv1");
+            }
         }
     }
 }

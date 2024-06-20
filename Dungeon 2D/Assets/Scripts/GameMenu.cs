@@ -9,5 +9,6 @@ public class GameMenu : MonoBehaviour
     public void OnQuitButtonClicked()
     {
         GameManager.instance.LoadScene("Main Menu");
+        Time.timeScale = 1f;
     }
 }

@@ -1743,6 +1743,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeDuration: 1
   level: 0
+  musicObjectName: MusicaBackground
 --- !u!4 &1494627073
 Transform:
   m_ObjectHideFlags: 0

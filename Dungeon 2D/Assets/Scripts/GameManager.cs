@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     public float fadeDuration = 1f; // Duración del desvanecimiento
     public int level = 0;
     private BattleSystem battleSystem;
+    private MainCharacter mainCharacter;
+    public string musicObjectName = "Music";
+    private string playerTarget = "PlayerMovePoint";
 
     private void Awake()
     {
@@ -33,6 +36,11 @@ public class GameManager : MonoBehaviour
                     battleSystem = GameObject.FindObjectOfType<BattleSystem>();
                     battleSystem.canMove = false;
                 }
+                if (mainCharacter == null)
+                {
+                    mainCharacter = GameObject.FindObjectOfType<MainCharacter>();
+                }
+                mainCharacter.anim.SetBool("Moving", false);
             }
             level++; // cada vez que cargue la escena aumentara el nivel
         }
@@ -85,6 +93,25 @@ public class GameManager : MonoBehaviour
         FadeTransition.instance.FadeToBlack();
         yield return new WaitForSeconds(FadeTransition.instance.fadeDuration); // Esperar a que la imagen se desvanezca completamente
         SceneManager.LoadScene(sceneName);
+        if (sceneName == "Main Menu")
+        {
+            level = 0;
+            mainCharacter = GameObject.FindObjectOfType<MainCharacter>();
+            if (mainCharacter != null)
+            {
+                Destroy(mainCharacter.gameObject);
+            }
+            GameObject musicObject = GameObject.Find(musicObjectName);
+            if (musicObject != null)
+            {
+                Destroy(musicObject);
+            }
+            GameObject targetObject = GameObject.Find(playerTarget);
+            if (targetObject != null)
+            {
+                Destroy(targetObject);
+            }
+        }
         FadeTransition.instance.FadeFromBlack();
     }
 }

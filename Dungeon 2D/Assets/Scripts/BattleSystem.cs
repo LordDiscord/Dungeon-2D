@@ -16,6 +16,8 @@ public class BattleSystem : MonoBehaviour
     public EnemyAI enemyAI;
     public List<Character> enemies = new List<Character>();
 
+    private bool endScene = false;
+    public int maxNum;
     public GameObject portal;
     private GridManager gridManager;
     public string nameState;
@@ -52,9 +54,9 @@ public class BattleSystem : MonoBehaviour
     void Start()
     {
         int minNum = 1 + GameManager.instance.level / 3;
-        int maxNum = 1 + GameManager.instance.level;
+        maxNum = 1 + GameManager.instance.level;
         int numEnemies = Random.Range(minNum, maxNum);
-        Debug.Log("minNum: "+minNum);
+        Debug.Log("minNum: " + minNum);
         Debug.Log("maxNum: " + maxNum);
 
         List<int> spawnIndices = new List<int>(); // Lista para guardar los índices de spawn ya utilizados
@@ -68,15 +70,20 @@ public class BattleSystem : MonoBehaviour
             }
             spawnIndices.Add(randomIndex); // Agrega el índice a la lista de utilizados
 
+            // Elige aleatoriamente entre goblin y skeleton
+            int randomValue = Random.Range(0, 100);
+            int increasePercentadge = 110 - ((maxNum - 1) * 10); //por cada nivel la probabilidad bajara un 10%
+            GameObject enemyPrefab = (randomValue < increasePercentadge) ? goblinPrefab : skeletonPrefab; // 66% para goblin, 34% para skeleton
+
             // Instancia el enemigo en la posición aleatoria y guarda la referencia en la lista de enemigos
-            GameObject enemyObject = Instantiate(skeletonPrefab, enemySpawns[randomIndex].position, Quaternion.identity);
-            Skeleton enemyCharacter = enemyObject.GetComponent<Skeleton>();
+            GameObject enemyObject = Instantiate(enemyPrefab, enemySpawns[randomIndex].position, Quaternion.identity);
+            Character enemyCharacter = enemyObject.GetComponent<Character>();
             enemies.Add(enemyCharacter);
         }
         state = BattleState.START;
         StartCoroutine(SetupBattle());
         enemyAI = new GameObject("EnemyAI").AddComponent<EnemyAI>();
-        enemyAI.Initialize(gridManager, this, enemies[0]); 
+        enemyAI.Initialize(gridManager, this, enemies[0]);
         enemyAI.StartEnemyAI();
     }
 
@@ -98,7 +105,7 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SetupBattle()
     {
-        nameState = "SetupBattle";
+        nameState = "Setup Battle";
         yield return new WaitForSeconds(2f);
         Debug.Log("Iniciativa Jugador: " + playerCharacter.GetInitiative()); // esto iria en el ui
         bool playerFirst = true;
@@ -125,9 +132,12 @@ public class BattleSystem : MonoBehaviour
     {
         nameState = "Battle Lost";
         canMove = false;
-        yield return new WaitForSeconds(2f);
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex);
+        yield return new WaitForSeconds(1.5f);
+        if (endScene == false)
+        {
+            GameManager.instance.LoadScene("GameOver");
+            endScene = true;    
+        }
     }
 
     void EndBattle()
@@ -168,6 +178,7 @@ public class BattleSystem : MonoBehaviour
                     float distanceToEnemy = Vector3.Distance(playerCharacter.transform.position, enemyGameObject.transform.position);
                     if (distanceToEnemy <= 1.5f && IsDiagonalOrAdjacent(playerPos, enemyPos)) // Verificar si está en rango y en posición diagonal o adyacente
                     {
+                        AttackEnemy(enemy);
                         if (enemyPos.x > playerPos.x) //animaciones de ataque
                         {
                             playerCharacter.AttackRight();
@@ -196,9 +207,6 @@ public class BattleSystem : MonoBehaviour
                             playerCharacter.NoAttackRight();
                             playerCharacter.transform.Rotate(new Vector3(0, 180, 0));
                         }
-
-                        // Ataca al enemigo
-                        AttackEnemy(enemy);
                     }
                 }
             }

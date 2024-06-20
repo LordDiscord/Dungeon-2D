@@ -99,12 +99,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86a5ce0e5a3e2504cb72f420cda8d3a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popUpDamagePrefab: {fileID: 7160758451082832173, guid: bae9d08a3089e7943934447b2215aa63, type: 3}
-  popUpText: {fileID: 6189121203235084153, guid: bae9d08a3089e7943934447b2215aa63, type: 3}
   anim: {fileID: 6468463567001282013}
   check: 0
+  popUpDamagePrefab: {fileID: 7160758451082832173, guid: bae9d08a3089e7943934447b2215aa63, type: 3}
+  popUpText: {fileID: 6189121203235084153, guid: bae9d08a3089e7943934447b2215aa63, type: 3}
   potionPrefabs:
+  - {fileID: 883976782133441567, guid: 232952c6a1604854580f3e90bc15c801, type: 3}
+  - {fileID: 883976782133441567, guid: 232952c6a1604854580f3e90bc15c801, type: 3}
+  - {fileID: 883976782133441567, guid: 232952c6a1604854580f3e90bc15c801, type: 3}
+  - {fileID: 883976782133441567, guid: 5469c81e9c1c8aa45a2af6652f057eba, type: 3}
   - {fileID: 883976782133441567, guid: e4c748fb0ee0e274d97ccbc5150b1bad, type: 3}
+  - {fileID: 883976782133441567, guid: c447834b759d07a4cb4d3fbfbc03bb8d, type: 3}
 --- !u!95 &6468463567001282013
 Animator:
   serializedVersion: 5

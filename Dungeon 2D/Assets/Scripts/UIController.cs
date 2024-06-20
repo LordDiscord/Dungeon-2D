@@ -21,6 +21,8 @@ public class UIController : MonoBehaviour
     public TextMeshProUGUI armorCount;
     public TextMeshProUGUI speedCount;
     public TextMeshProUGUI attackCount;
+    public TextMeshProUGUI levelCount;
+    private int level = 0;
     private int attacksCount = 0;
 
     public MainCharacter player; // Referencia al objeto jugador
@@ -41,7 +43,7 @@ public class UIController : MonoBehaviour
             // Actualizar los textos con los valores de las estadísticas del jugador
             attacksCount = player.GetAttacks() - turno.playerAttack;
 
-            turnText.text = "CURRENT TURN: " + turno.state;
+            turnText.text = "CURRENT TURN: " + turno.nameState;
             hpText.text = "HEALTH: " + player.GetHealth().ToString();
             hpText2.text = "HP: " + player.GetHealth().ToString();
             armorText.text = "ARMOR: " + player.GetArmor().ToString();
@@ -49,6 +51,8 @@ public class UIController : MonoBehaviour
             dexText.text = "DEXTERITY: " + player.GetDexterity().ToString();
             intText.text = "INTELIGENCE: " + player.GetIntelligence().ToString();
             initText.text = "INITIATIVE: " + player.GetInitiative().ToString();
+            level = turno.maxNum - 1;
+            levelCount.text = "LEVEL: " + level; 
 
             //Inventory
             healthCount.text = player.GetItemCount("HealthPotion").ToString();

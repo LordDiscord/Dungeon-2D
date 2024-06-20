@@ -3023,7 +3023,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d15e5addbdb59543911ca2ae1ad581b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: Sala Combate niv1
 --- !u!50 &593321874
 Rigidbody2D:
   serializedVersion: 4
@@ -4360,6 +4359,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menu: {fileID: 306624633}
+  controlsMenu: {fileID: 1496832848}
+  inventoryMenu: {fileID: 978278857}
 --- !u!114 &1288464766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6901,7 +6902,7 @@ GameObject:
   - component: {fileID: 1777030829}
   - component: {fileID: 1777030828}
   m_Layer: 0
-  m_Name: Forest(sounds)
+  m_Name: MainTheme
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23018,6 +23019,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 306624633}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 519420034}
         m_TargetAssemblyTypeName: GameMenu, Assembly-CSharp
         m_MethodName: OnQuitButtonClicked
